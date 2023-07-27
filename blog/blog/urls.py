@@ -49,5 +49,5 @@ urlpatterns = [
     path('logout/', auth.LogoutView.as_view(), name='logout'),
 
     # registro
-    path("usuarios/", include("apps.usuarios.urls"))
+    path("usuarios/", include("apps.usuarios.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #carga las imagenes de blog/media que son imagenes que se guardan en la BD

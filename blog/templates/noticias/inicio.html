@@ -1,25 +1,58 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block titulo%} noticias {% endblock titulo %}
 
-{%block titulo%} NOTICIAS {%endblock titulo%}
+{% block contenido%}
+<aside>
+    <div class="p-4">
+        <h4 class="fst-italic">Categorias</h4>
+        <ol class="list-unstyled mb-0">
 
-{%block contenido%}
-<h1>NOTICIAS</h1>
+            <li><a href="{% url 'noticias:inicio' %}"> Todas</a></li>
+            <li>{% for c in categorias %}
+                <a href="?id={{c.pk}}">{{c.nombre}}</a>
+                {% endfor %}
+            </li>
+        </ol>
+    </div>
+    </div>
+</aside>
+</div>
 
 
-<a href="{% url 'noticias:inicio' %}"> Todas</a>
-{% for c in categorias %}
-<a href="?id={{c.pk}}">{{c.nombre}}</a>
+    {% for noticia in noticias %}
+    <div class="contenedor">
+    <div class="row mb-2">
+        <div class="col-md-16">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-8 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary-emphasis">{{noticia.categoria_noticia}}</strong>
+                    <h3 class="mb-0"><strong>{{ noticia.titulo }}</strong></h3>
+                    <div class="mb-1 text-body-secondary">{{noticia.fecha}}</div>
+                    <p class="card-text mb-auto">{{ noticia.cuerpo }}</p>
+                    <a href="{% url 'noticias:detalle' noticia.pk %}"
+                        class="icon-link gap-1 icon-link-hover stretched-link">
+                        Seguir leyendo...
+                        <svg class="bi">
+                            <use xlink:href="#chevron-right"></use>
+                        </svg>
+                    </a>
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                    <img class="bd-placeholder-img" src="{{ noticia.imagen.url }}" width="400" height="250"
+                        xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                        preserveAspectRatio="xMidYMid slice" focusable="false">
+
+                    <title>Placeholder</title>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 {% endfor %}
 
 
-{% for noticia in noticias %}
-<h2>titulo:<a href="{% url 'noticias:detalle' noticia.pk %}"> <strong>{{ noticia.titulo }}</strong></a></h2>
-<img src="{{ noticia.imagen.url }}" alt="" width="500">
-<!-- <p> cuerpo : {{ noticia.cuerpo }}</p> -->
-<p>{{noticia.fecha}}</p> 
-
-{% endfor %}
-
-{%endblock contenido%}    
+{% endblock contenido%}

@@ -6,12 +6,16 @@
 {% block contenido%}
 
 <h1>{{noticia}}</h1>
-<img src="{{noticia.imagen.url}}" alt="" width="150">
+<img src="{{noticia.imagen.url}}" alt="" width="300">
 <p>{{noticia.cuerpo}}</p>
 <p>{{noticia.fecha}}</p>
 <p>{{noticia.categoria_noticia}}</p>
 
 
+
+<br>
+<hr>
+<h3>Comentá algo aquí</h3>
 <form action="{% url 'noticias:comentar' %}" method="post">{% csrf_token %}
 
     <textarea name="comentario" cols="30" rows="3"></textarea>
@@ -19,12 +23,35 @@
     <input type="submit" value="comentar">
 
 </form>
+<br>
+<hr>
 <h3>Comentarios</h3>
-{% for com in comentarios %}
+<!-- {% for com in comentarios %}
 
 <p><strong>{{ com.usuario }}</strong> {{ com.fecha }}</p>
 <p> comentario: {{ com.texto }}</p>
+{% endfor %} -->
+
+    {% for com in comentarios %}
+    <div class="contenedor">
+    <div class="row mb-2">
+        <div class="col-md-16">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-8 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary-emphasis">{{ com.usuario }}  </strong>
+                    <h3 class="mb-0"><strong> comentario: {{ com.texto }}</strong></h3>
+                    <div class="mb-1 text-body-secondary"> {{ com.fecha }}</div>
+                
+                    <title>Placeholder</title>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endfor %}
-
 {% endblock contenido%}
+
+
