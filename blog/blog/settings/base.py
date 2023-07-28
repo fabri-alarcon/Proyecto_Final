@@ -12,11 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
-
-
-# creando el reverse_lazy para las redirecciones dentro de los formularios L/R
+# import reverse_lazy para las redirecciones dentro de los formularios L/R
 from django.urls import reverse_lazy
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,14 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-# 8
-LOGIN_REDIRECT_URLS = reverse_lazy("home")
-LOGUOT_REDIRECT_URLS = reverse_lazy("home")
-LOGIN_URLS = reverse_lazy("login")
 
-# especificamos que modificamos o usamos el abstractuser para nuestra clase Usuario, ingresando el nombre de la app + la clase
+
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
+LOGIN_URL = reverse_lazy('login')
+
 AUTH_USER_MODEL = 'usuarios.Usuario'
-
 
 # Application definition
 
@@ -42,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # cada app que creamos tenemos que instalarla acá a travéz de un codigo especoficando la ruta
     'apps.usuarios',
     'apps.noticias',
+
 ]
 
 MIDDLEWARE = [
@@ -78,10 +75,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'blog.wsgi.application'
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
+'''
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -96,7 +92,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+'''
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -113,16 +109,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
 STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(BASE_DIR)), 'static')
+    os.path.join(os.path.dirname(BASE_DIR), 'static'),
+)
 
-# Media (photos, video, etc)
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

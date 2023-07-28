@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .views import *
+
 
 app_name = "noticias"
 
@@ -13,7 +15,10 @@ urlpatterns = [
     path('contacto', views.contacto, name="contacto"),
 
       # URL COMENTARIO
-    path('comentario', views.Comentar_Noticia, name='comentar')
-    
+    path('comentario', views.Comentar_Noticia, name='comentar'),
 
+    # path('editnoticia', views.editnoticia, name='editar'),
+
+    path('post/edit/<int:pk>/', views.editnoticia.as_view(), name="post-edit"),
+    path('post/delete/<int:pk>', views.deletnoticia.as_view(), name="post-delete"),
 ]

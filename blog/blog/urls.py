@@ -22,7 +22,7 @@ from . import views
 from django.contrib.auth import views as auth
 from django.conf.urls.static import static
 
-
+from django.urls import reverse_lazy 
 from django.conf import settings
 
 # URL PRINCIPAL
@@ -45,8 +45,9 @@ urlpatterns = [
     path('login/', auth.LoginView.as_view(template_name='usuarios/login.html'), name='login'),
     # ultimo error de la clase solucionado
     # path('logout/', auth.LoginView.as_view(), name='logout'),
-    # cambiar LoginView por LogoutView
-    path('logout/', auth.LogoutView.as_view(), name='logout'),
+    # cambiar   LoginView por LogoutView
+    path('logout/',auth.LogoutView.as_view() , name='logout'),
+
 
     # registro
     path("usuarios/", include("apps.usuarios.urls")),

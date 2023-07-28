@@ -11,5 +11,7 @@ from .forms import RegistroForm
 class Registro(CreateView):
     # forms django
     form_class = RegistroForm
-    success_url = reverse_lazy('login.html')
+    success_url = reverse_lazy('login')
     template_name = 'usuarios/registro.html'
+
+ 

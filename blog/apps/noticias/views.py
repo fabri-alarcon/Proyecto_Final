@@ -2,13 +2,13 @@ from django.shortcuts import render, HttpResponse, redirect
 from .models import Noticia, Categoria, Contacto, Comentario
 # Create your views here.
 
-from .forms import ContactoForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin  
+
+from .forms import ContactoForm, NoticiaForm
 # importamos reverse lazy para los comentarios
 from django.urls import reverse_lazy
 
-
-# def inicio(request):
-#     return HttpResponse("<h1>HOLA MUNDO</h1> <h2> desde django</h2>")
+from django.views.generic.edit import UpdateView, DeleteView
 
 # decorador para ver las noticias solamente como usuario logueado
 from django.contrib.auth.decorators import login_required
@@ -63,7 +63,7 @@ def contacto(request):
         'form': ContactoForm()
     }
     if request.method == 'POST':
-        ContactoForm(data=request.POST).save()
+          ContactoForm(data=request.POST).save()
 
     return render(request, 'contacto/formulario.html', data)
 
@@ -77,3 +77,41 @@ def Comentar_Noticia(request):
     coment = Comentario.objects.create(
         usuario=user, noticia=noticia, texto=comentario)
     return redirect(reverse_lazy('noticias:detalle', kwargs={"pk": noti}))
+
+
+# def add_noticias(request):
+#     data = NoticiaForm().save() 
+#     # # }
+#     # if request.method == 'POST':
+#     # NoticiaForm(data=request.POST).save()
+     
+#     return render(request, 'contacto/formulario.html', {"form": data})
+
+# def editnoticia(LigunRequiredMinxin, UserPassesTestMixin, UpdateView):
+#     model = Noticia
+#     fields = ["body"]
+#     template_name=''
+
+
+class editnoticia(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model=Noticia
+    fields=['body']
+    template_name='templates/noticias/edit.html'
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('noticias:detalle', kwargs={'pk':pk})
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.titulo == post.titulo
+    
+
+class deletnoticia(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model=Noticia
+    template_name='templates/noticias/delete.html'
+    success_url = reverse_lazy('home')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.titulo == post.titulo

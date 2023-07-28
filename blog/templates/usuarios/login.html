@@ -11,7 +11,7 @@
     <from metho="POST"> {% csrf_token %}
     <input type="username" name="username">
     <input type="password" name="password">
-    <input type="submit"> 
+    <input href="{% url 'home' %}" type="submit"> 
 
     </form>
     <br>

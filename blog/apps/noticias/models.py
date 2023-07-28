@@ -13,6 +13,7 @@ class Categoria(models.Model):
 class Noticia(models.Model):
     titulo = models.CharField(max_length=150)
     cuerpo = models.TextField()
+    # author = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name= 'username')
     fecha = models.DateTimeField(auto_now_add=True)
     imagen = models.ImageField(upload_to='noticias')
     categoria_noticia = models.ForeignKey(Categoria, on_delete=models.CASCADE)
