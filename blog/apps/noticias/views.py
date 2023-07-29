@@ -132,20 +132,7 @@ def eliminar_noticia(request, pk):
     noticia = Noticia.objects.get(pk =pk)
     noticia.delete()
     return redirect("noticias:inicio")
-# class Eliminar_noticia(View):
-#     def get(self, request, pk):
-#         noticia = get_object_or_404(Noticia, pk=pk) # comprobamos si el usuaro que va a borrarlo es el mismo que quien creó el comentario, para mandarlo al html de delete
-#         if noticia.usuario == request.user:
-#             return render(request, 'noticias/deletenoticia.html')
-#         else:
-#   # sinó lo redireccionamos de nuevo al inicio
-#             return redirect('noticias:inicio') 
 
-#     def post(self, request, pk):
-#         noticia = get_object_or_404(Noticia, pk=pk)
-#         if noticia.usuario == request.user: # si el usuario es el que creó el comentario este se borra
-#         noticia.delete()
-#         return redirect('noticias:inicio')  
 
 
 
