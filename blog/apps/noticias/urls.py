@@ -14,11 +14,14 @@ urlpatterns = [
     # url del formulario de contacto
     path('contacto', views.contacto, name="contacto"),
 
-      # URL COMENTARIO
+    # URL COMENTARIO
     path('comentario', views.Comentar_Noticia, name='comentar'),
 
-    # path('editnoticia', views.editnoticia, name='editar'),
+    # comentarios
+    path('<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
+    path('<int:pk>/edit/', views.Editcomentario.as_view(), name='comment_edit'),
 
-    path('post/edit/<int:pk>/', views.editnoticia.as_view(), name="post-edit"),
-    path('post/delete/<int:pk>', views.deletnoticia.as_view(), name="post-delete"),
+    path('add_noticia', views.agregar_noticia, name='agregar_noticia'),
+    path('<int:pk>/del_noticia', views.eliminar_noticia, name='eliminar_noticia'),
+
 ]

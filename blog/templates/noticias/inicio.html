@@ -22,7 +22,8 @@
 </aside>
 </div>
 
-
+<hr>
+<h4><a href="{% url 'noticias:agregar_noticia' %}"> Agregar Noticia</a></h4>
 <hr>
 
 
@@ -36,7 +37,7 @@
                     <strong class="d-inline-block mb-2 text-primary-emphasis">{{noticia.categoria_noticia}}</strong>
                     <h3 class="mb-0"><strong>{{ noticia.titulo }}</strong></h3>
                     <div class="mb-1 text-body-secondary">{{noticia.fecha}}</div>
-                    <p class="card-text mb-auto">{{ noticia.cuerpo }}</p>
+                    <p class="card-text mb-auto">{{ noticia.cuerpo|slice:250 }}...</p>
                     <a href="{% url 'noticias:detalle' noticia.pk %}"
                         class="icon-link gap-1 icon-link-hover stretched-link">
                         Seguir leyendo...
@@ -64,8 +65,34 @@
 
 <!-- boton de subida -->
 <hr>
-<h2><a href="{% url 'noticias:inicio' %}"> Volver arriba <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
-    <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
-  </svg></a></h2>
+
+  <button   id="btnVolverArriba" justify-content-center  width="52" height="52" class="btn btn-primary" style="display: none;">Volver arriba</button>
+
+  <script>
+    // Obtener el botón y el evento scroll
+    const btnVolverArriba = document.getElementById('btnVolverArriba');
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 100) {
+            // Mostrar el botón cuando el desplazamiento sea mayor a 100px
+            btnVolverArriba.style.display = 'block';
+        } else {
+            // Ocultar el botón cuando el desplazamiento sea menor o igual a 100px
+            btnVolverArriba.style.display = 'none';
+        }
+    });
+
+
+     // Función para volver arriba cuando se hace clic en el botón
+    btnVolverArriba.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Desplazamiento suave (smooth)
+        });
+    });
+
+
+    </script>
+
+
 
 {% endblock contenido%}

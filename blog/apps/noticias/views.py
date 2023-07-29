@@ -8,14 +8,14 @@ from .forms import ContactoForm, NoticiaForm
 # importamos reverse lazy para los comentarios
 from django.urls import reverse_lazy
 
-from django.views.generic.edit import UpdateView, DeleteView
 
 # decorador para ver las noticias solamente como usuario logueado
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+
 
 # uso de decorador para verificar logeo de usuario y poder ver noticia
-
-
 @login_required
 def inicio(request):
     # obtener todas las noticias y mostrar en el inicio.html
@@ -47,6 +47,8 @@ def Detalle_Noticias(request, pk):
     n = Noticia.objects.get(pk=pk)
     contexto['noticia'] = n
 
+   
+
     c = Comentario.objects.filter(noticia=n)
     contexto['comentarios'] = c
 
@@ -63,7 +65,7 @@ def contacto(request):
         'form': ContactoForm()
     }
     if request.method == 'POST':
-          ContactoForm(data=request.POST).save()
+           ContactoForm(data=request.POST).save()
 
     return render(request, 'contacto/formulario.html', data)
 
@@ -79,39 +81,71 @@ def Comentar_Noticia(request):
     return redirect(reverse_lazy('noticias:detalle', kwargs={"pk": noti}))
 
 
-# def add_noticias(request):
-#     data = NoticiaForm().save() 
-#     # # }
-#     # if request.method == 'POST':
-#     # NoticiaForm(data=request.POST).save()
-     
-#     return render(request, 'contacto/formulario.html', {"form": data})
+# creando las clases que me permiten modificar y elimiar los comentarios
+class Editcomentario(View):
+    def get(self, request, pk):
+        comment = Comentario.objects.get(pk=pk) # extraemos el objeto de comentarios con igual pk
+        return render(request, 'noticias/edit.html', {'comment': comment})
 
-# def editnoticia(LigunRequiredMinxin, UserPassesTestMixin, UpdateView):
-#     model = Noticia
-#     fields = ["body"]
-#     template_name=''
+    def post(self, request, pk):
+        comment = Comentario.objects.get(pk=pk)
+        nuevo_contenido = request.POST.get('texto')
+        comment.texto = nuevo_contenido
+        comment.save()
+        noticia = comment.noticia      # buscamos de que noticia es el comentario para sarlo para redireccionarme a la misma despues de editarla
+        return redirect('noticias:detalle', pk=noticia.pk)
 
 
-class editnoticia(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model=Noticia
-    fields=['body']
-    template_name='templates/noticias/edit.html'
 
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse_lazy('noticias:detalle', kwargs={'pk':pk})
+class CommentDeleteView(View):
+    def get(self, request, pk):
+        comment = get_object_or_404(Comentario, pk=pk) # comprobamos si el usuaro que va a borrarlo es el mismo que quien creó el comentario, para mandarlo al html de delete
+        if comment.usuario == request.user:
+            return render(request, 'noticias/delete.html', {'comment': comment})
+        else:
+            noticia = comment.noticia  # sinó lo redireccionamos de nuevo
+            return redirect('noticias:detalle', pk=noticia.pk) 
 
-    def test_func(self):
-        post = self.get_object()
-        return self.request.titulo == post.titulo
-    
+    def post(self, request, pk):
+        comment = get_object_or_404(Comentario, pk=pk)
+        if comment.usuario == request.user: # si el usuario es el que creó el comentario este se borra
+            comment.delete()
+        noticia = comment.noticia
+        return redirect('noticias:detalle', pk=noticia.pk)  
 
-class deletnoticia(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model=Noticia
-    template_name='templates/noticias/delete.html'
-    success_url = reverse_lazy('home')
 
-    def test_func(self):
-        post = self.get_object()
-        return self.request.titulo == post.titulo
+def agregar_noticia(request):
+    if request.method == 'POST':
+        form = NoticiaForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('noticias:inicio')
+    else:
+        form = NoticiaForm()
+
+    return render(request, 'noticias/formulario.html', {'form': form})
+  
+
+
+
+def eliminar_noticia(request, pk):
+    noticia = Noticia.objects.get(pk =pk)
+    noticia.delete()
+    return redirect("noticias:inicio")
+# class Eliminar_noticia(View):
+#     def get(self, request, pk):
+#         noticia = get_object_or_404(Noticia, pk=pk) # comprobamos si el usuaro que va a borrarlo es el mismo que quien creó el comentario, para mandarlo al html de delete
+#         if noticia.usuario == request.user:
+#             return render(request, 'noticias/deletenoticia.html')
+#         else:
+#   # sinó lo redireccionamos de nuevo al inicio
+#             return redirect('noticias:inicio') 
+
+#     def post(self, request, pk):
+#         noticia = get_object_or_404(Noticia, pk=pk)
+#         if noticia.usuario == request.user: # si el usuario es el que creó el comentario este se borra
+#         noticia.delete()
+#         return redirect('noticias:inicio')  
+
+
+
