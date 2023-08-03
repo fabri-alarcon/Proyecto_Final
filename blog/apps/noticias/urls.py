@@ -23,5 +23,9 @@ urlpatterns = [
 
     path('add_noticia', views.agregar_noticia, name='agregar_noticia'),
     path('<int:pk>/del_noticia', views.eliminar_noticia, name='eliminar_noticia'),
+    path('<int:pk>/editar_noticia', views.editar_noticia, name='editar_noticia'),
+
+    # filtrado
+    path('filtrar/', views.filtrar_noticia, name='filtrar_noticia'),
 
 ]

@@ -9,8 +9,9 @@
     <h2>LOGIN</h2>
     {{ form.errors }}
     <from metho="POST"> {% csrf_token %}
-    <input type="username" name="username">
-    <input type="password" name="password">
+    <input type="username" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Contraseña">
+    <input type="hidden" name="next" value="{{next}}" />
     <input href="{% url 'home' %}" type="submit"> 
 
     </form>
