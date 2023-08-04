@@ -20,9 +20,9 @@
 
 <br>
 <hr>
+
+
 {% if user.is_authenticated %}
-
-
 <h3>Comentá algo aquí</h3>
 <form action="{% url 'noticias:comentar' %}" method="post">{% csrf_token %}
 
@@ -60,10 +60,14 @@
     </div>
     </div>
 
-    <hr>
+     
+<hr>
+
+
     {% if user.is_superuser or user.is_staff %}
         <button type="button" class="btn btn-outline-primary me-2"><a class="nav-link" href="{% url 'noticias:eliminar_noticia' noticia.pk %}"> eliminar noticia</a></button>
     {% endif %}
+    
 {% else %}
     <h3>¿Quieres comentar y ver las opiniones de los demás?</h3> 
     <h2> LOGEATE </h2>

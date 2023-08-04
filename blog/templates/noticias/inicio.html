@@ -42,21 +42,26 @@
     </div>
 </aside>
 </div>
+
 {% if user.is_superuser or user.is_staff %}
-<hr>
-<button type="button" class="btn btn-primary"><a class="nav-link" href="{% url 'noticias:agregar_noticia' %}"> Agregar Noticia</a></button>
+
+    <hr>
+    <button type="button" class="btn btn-primary"><a class="nav-link" href="{% url 'noticias:agregar_noticia' %}"> Agregar Noticia</a></button>
+
 {% endif %}
+
+
 <hr>
 
+<a href="{% url 'noticias:inicio' %}?fecha=asc ">Más antiguas</a>
 
-<a href="{% url 'noticias:filtrar_noticia' %}?fecha=asc">Más antiguas</a>
+<a href="{% url 'noticias:inicio' %}?fecha=des ">Más actuales</a>
 
-<a href="{% url 'noticias:filtrar_noticia' %}?fecha=des">Más actuales</a>
+<a href="{% url 'noticias:inicio' %}?orden=asc ">De A a Z</a>
 
-<a href="{% url 'noticias:filtrar_noticia' %}?orden=asc">De A a Z</a>
+<a href="{% url 'noticias:inicio' %}?orden=des ">De Z a A</a>
 
-<a href="{% url 'noticias:filtrar_noticia' %}?orden=des">De Z a A</a>
-
+<hr>
 
 {% for noticia in noticias %}
     <div class="contenedor">

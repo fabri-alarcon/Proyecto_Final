@@ -56,3 +56,7 @@ card {
     box-shadow: none;
     border:none;
 }
+
+#icono-izquierda {
+    text-align: left;
+}

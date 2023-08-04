@@ -18,52 +18,109 @@ from django.views import View
 
 # uso de decorador para verificar logeo de usuario y poder ver noticia
 # @login_required
-# def inicio(request):
-#     # obtener todas las noticias y mostrar en el inicio.html
-#     # ctx = {}
-#     # # clase.objetcs.all()==> select * from noticia
-#     # noticia = Noticia.objects.all()
-#     # ctx["noticias"] = noticia
-#     # return render(request, 'noticias/inicio.html', ctx)
-#     contexto = {}
-#     id_categoria = request.GET.get('id', None)
+def filtrar_noticia(fecha, orden, contexto):
+    if fecha == 'asc':
+        noticias = Noticia.objects.all().order_by('fecha')
+        contexto['noticias'] = noticias
 
-#     if id_categoria:
-#         n = Noticia.objects.filter(categoria_noticia=id_categoria)
-#     else:
-#         n = Noticia.objects.all().order_by('-fecha')  # una lista
+    elif fecha == 'des':
+        noticias= Noticia.objects.all().order_by('-fecha')
+        contexto['noticias'] = noticias
 
-#     contexto['noticias'] = n
-    
-#     cat = Categoria.objects.all().order_by('nombre')
-#     contexto['categorias'] = cat
 
-#     return render(request, 'noticias/inicio.html', contexto)
+    if orden == 'asc':
+        noticias = Noticia.objects.all().order_by('titulo')
+        contexto['noticias'] = noticias
+
+    elif orden == 'des':
+        noticias = Noticia.objects.all().order_by('-titulo')
+        contexto['noticias'] = noticias
+    return contexto
+
 def inicio(request):
     contexto = {}
     queryset = request.GET.get("buscar") 
+    fecha = request.GET.get('fecha')
+    orden = request.GET.get('orden')
     if queryset:
         n = Noticia.objects.filter(
-            Q(titulo__icontains = queryset) |
-            Q(cuerpo__icontains = queryset) |
+            Q(tituloicontains = queryset) |
+            Q(cuerpoicontains = queryset) |
             Q(categoria_noticia__nombre = queryset)
-        ).distinct().order_by('-fecha')[:5]
-        contexto['noticias'] = n
+        ).distinct().order_by('-fecha')[0:2]
+
+        filtrar_noticia(fecha, orden, contexto)['noticias'] = n
 
         return render(request, 'noticias/inicio.html',contexto)
     else:
         id_categoria = request.GET.get('id', None)
         if id_categoria:
-            n = Noticia.objects.filter(categoria_noticia=id_categoria).order_by('-fecha')[:5]
+            n = Noticia.objects.filter(categoria_noticia=id_categoria).order_by('-fecha')
+     
+
         else:
-            n = Noticia.objects.all().order_by('-fecha')[:5]  # una lista
-        contexto['noticias'] = n
-        cat = Categoria.objects.all().order_by('nombre')[:5]
-        contexto['categorias'] = cat
+            n = Noticia.objects.all().order_by('-fecha') # una lista
+        filtrar_noticia(fecha, orden, contexto)['noticias'] = n
+        cat = Categoria.objects.all()
+        filtrar_noticia(fecha, orden, contexto)['categorias'] = cat
         return render(request, 'noticias/inicio.html', contexto)
 
+# def inicio(request):
+#     contexto = {}
+#     queryset_buscar = request.GET.get("buscar") 
+#     queryset_fecha = request.GET.get('fecha')
+#     queryset_orden = request.GET.get('orden')
+#     queryset_categoria = request.GET.get('id')
+    
 
+#     if queryset_categoria:
+#         n = Noticia.objects.filter(categoria_noticia=queryset_categoria).order_by('-fecha')
+#         noticias = n
+#         contexto['noticias']= noticias
+#         cat = Categoria.objects.filter(id=queryset_categoria)
+#         contexto['categorias']= cat
+#         return render(request, 'noticias/inicio.html',contexto)
 
+#     elif queryset_buscar:
+#         noticias = Noticia.objects.filter(
+#         Q(tituloicontains = queryset_buscar) |
+#         Q(cuerpoicontains = queryset_buscar) |
+#         Q(categoria_noticia__nombre = queryset_buscar)
+#         ).distinct()
+#         contexto['noticias']= noticias
+#         return render(request, 'noticias/inicio.html',contexto)
+
+    
+       
+
+#     elif queryset_fecha == 'asc':
+#         noticias = Noticia.objects.order_by('fecha')
+#         contexto['noticias']= noticias
+#         return render(request, 'noticias/inicio.html',contexto)
+
+#     elif queryset_fecha == 'des':
+#         noticias = Noticia.objects.order_by('-fecha')
+#         contexto['noticias']= noticias
+#         return render(request, 'noticias/inicio.html',contexto)
+
+#     elif queryset_orden == 'asc':
+#         noticias = Noticia.objects.order_by('titulo')
+#         contexto['noticias']= noticias
+#         return render(request, 'noticias/inicio.html',contexto)
+
+#     elif queryset_orden == 'des':
+#         noticias = Noticia.objects.order_by('-titulo')
+#         contexto['noticias']= noticias
+#         return render(request, 'noticias/inicio.html',contexto)
+
+#     else:
+#         noticias = Noticia.objects.all() 
+#         contexto['noticias']= noticias
+#         cat = Categoria.objects.all()
+#         contexto['categorias'] = cat
+#         return render(request, 'noticias/inicio.html',contexto)
+
+ 
 # @login_required
 def Detalle_Noticias(request, pk):
     contexto = {}
@@ -184,23 +241,5 @@ def editar_noticia(request, pk):
     return render(request, 'noticias/editnoticia.html',{'form': form, 'noticia': noticia})
 
 
-def filtrar_noticia(request):
-    fecha = request.GET.get('fecha')
-    orden = request.GET.get('orden')
 
-    if fecha == 'asc':
-        noticias = Noticia.objects.all().order_by('fecha')
-     
-    elif fecha == 'des':
-        noticias= Noticia.objects.all().order_by('-fecha')
-     
 
-    if orden == 'asc':
-        noticias = Noticia.objects.all().order_by('titulo')
-    
-    elif orden == 'des':
-        noticias = Noticia.objects.all().order_by('-titulo')
-      
-
-    return render(request, 'noticias/inicio.html',{ 'noticias': noticias})
-      
